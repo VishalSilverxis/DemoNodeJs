@@ -1,5 +1,5 @@
 const { response, pagination } = require("../common/response");
-const Country = require("../Models/country");
+const Country = require("../models/country");
 const { InternalServerError } = require("../common/status");
 const { success, fail } = require("../common/strings");
 const { cleanObject } = require("../utils/object_helper");
