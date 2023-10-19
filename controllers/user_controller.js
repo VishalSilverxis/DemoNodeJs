@@ -88,7 +88,7 @@ exports.patchUser = async (req, res) => {
     const data = req.body;
 
     // Check user is exist or not
-    var doesUserExist = await User.findOne({ id: data.id });
+    var doesUserExist = await User.findById(data.id);
     console.log(doesUserExist);
     if (doesUserExist == null) {
       return res.json(response(false, "User does not exist", {}));
