@@ -76,6 +76,34 @@ exports.addUser = async (req, res) => {
   }
 };
 
+exports.deleteUser = async (req, res) => {
+  if (!isValidRequest(req, res)) {
+    return;
+  }
+
+  try {
+    // Get data from body
+    const data = req.body;
+
+    // Check user is exist or not
+    var doesUserExist = await User.findById(data.id);
+    console.log(doesUserExist);
+    if (doesUserExist == null) {
+      return res.json(response(false, "User does not exist", {}));
+    }
+    const result = await User.deleteOne({_id: data.id});
+    if (result.deletedCount) {
+      return res.json(response(true, success, {}));
+    } else {
+      return res.json(response(false, "Something went wrong", {}));
+    }
+    
+  } catch (error) {
+    console.log(error);
+    return res.status(InternalServerError).json(response(false, error.message));
+  }
+};
+
 exports.patchUser = async (req, res) => {
   if (!isValidRequest(req, res)) {
     return;

@@ -16,9 +16,11 @@ router.get('/',(req,res) => {
 });
 
 // User Route
+
 router.post(route.getUser, [
     check("id").isMongoId().withMessage("invalid id").optional(),
 ], userController.getUser);
+
 router.post(route.addUser, [
     check("user_name").notEmpty().withMessage("User name is required"),
     check("email").notEmpty().withMessage("Email is required"),
@@ -38,6 +40,11 @@ router.patch(route.editUser, [
     check("password").notEmpty().withMessage("Password is required"),
     ], 'No parameter found to update'),
 ], userController.patchUser);
+
+router.post(route.deleteUser, [
+  check("id").notEmpty().withMessage("id is required"),
+  check("id").isMongoId().withMessage("id is invalid"),
+], userController.deleteUser);
 
 // Country Route
 router.post(route.getCountry, [], countryController.getCountry);
