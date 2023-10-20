@@ -45,7 +45,6 @@ exports.getUser = async (req, res) => {
 }
 
 exports.addUser = async (req, res) => {
-  console.log(req.body);
   if (!isValidRequest(req, res)) {
     return;
   }
@@ -70,7 +69,6 @@ exports.addUser = async (req, res) => {
       response(true, success, cleanObject(result._doc))
     );
   } catch (error) {
-    console.log(error);
     if (error.name === 'MongoServerError' && error.code === 11000) {
       return res.json(response(false, `There was a duplicate key : ${Object.keys(error.keyValue).join(', ')}`));
     }
@@ -79,7 +77,6 @@ exports.addUser = async (req, res) => {
 };
 
 exports.patchUser = async (req, res) => {
-  //console.log(req.body);
   if (!isValidRequest(req, res)) {
     return;
   }
@@ -89,7 +86,6 @@ exports.patchUser = async (req, res) => {
 
     // Check user is exist or not
     var doesUserExist = await User.findById(data.id);
-    console.log(doesUserExist);
     if (doesUserExist == null) {
       return res.json(response(false, "User does not exist", {}));
     }
