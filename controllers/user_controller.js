@@ -5,6 +5,7 @@ const { InternalServerError } = require("../common/status");
 const { success } = require("../common/strings");
 const User = require("../models/user");
 const { cleanObject } = require("../utils/object_helper");
+const { moment } = require("moment");
 
 exports.getUser = async (req, res) => {
   if (!isValidRequest(req, res)) {
@@ -22,9 +23,9 @@ exports.getUser = async (req, res) => {
     var userId = data.id;
     if (userId) {
       var result = await User.findById(userId);
-      if(result) {
+      if (result) {
         // If user if given id is exist
-        return res.json(response(true, success, cleanObject(result._doc)));
+        return res.json(response(true, success, getUserResponse(result)));
       } else {
         // If user not exist
         return res.json(response(false, `User does not exist`, {}));
@@ -33,14 +34,26 @@ exports.getUser = async (req, res) => {
 
     // Fetch all users
     var result = await User.find();
-    result.map((e) => {
-      cleanObject(e._doc);
+    const result1 = result.map((e) => {
+      return getUserResponse(e);
     });
     return res.json(
-      response(true, success, result)
+      response(true, success, result1)
     );
   } catch (error) {
     return res.status(InternalServerError).json(response(false, error.message));
+  }
+}
+
+function getUserResponse(data) {
+  return {
+    id: data._id,
+    name: data.user_name,
+    email: data.email,
+    mobile: data.mobile,
+    country_id: data.country_id,
+    gender: data.gender,
+    dob: new Date(data.dob).toISOString().slice(0, 10),
   }
 }
 
@@ -96,7 +109,7 @@ exports.deleteUser = async (req, res) => {
     } else {
       return res.json(response(false, `Something went wrong`, {}));
     }
-    
+
   } catch (error) {
     return res.status(InternalServerError).json(response(false, error.message));
   }
