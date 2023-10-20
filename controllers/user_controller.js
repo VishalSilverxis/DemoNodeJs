@@ -27,7 +27,7 @@ exports.getUser = async (req, res) => {
         return res.json(response(true, success, cleanObject(result._doc)));
       } else {
         // If user not exist
-        return res.json(response(false, "User does not exist", {}));
+        return res.json(response(false, `User does not exist`, {}));
       }
     }
 
@@ -86,20 +86,18 @@ exports.deleteUser = async (req, res) => {
     const data = req.body;
 
     // Check user is exist or not
-    var doesUserExist = await User.findById(data.id);
-    console.log(doesUserExist);
-    if (doesUserExist == null) {
-      return res.json(response(false, "User does not exist", {}));
+    var userToDelete = await User.findById(data.id);
+    if (userToDelete == null) {
+      return res.json(response(false, `User does not exist`, {}));
     }
-    const result = await User.deleteOne({_id: data.id});
-    if (result.deletedCount) {
-      return res.json(response(true, success, {}));
+    const result = await User.findByIdAndRemove(data.id);
+    if (result) {
+      return res.json(response(true, `Deleted successfully`, {}));
     } else {
-      return res.json(response(false, "Something went wrong", {}));
+      return res.json(response(false, `Something went wrong`, {}));
     }
     
   } catch (error) {
-    console.log(error);
     return res.status(InternalServerError).json(response(false, error.message));
   }
 };
@@ -115,7 +113,7 @@ exports.patchUser = async (req, res) => {
     // Check user is exist or not
     var doesUserExist = await User.findById(data.id);
     if (doesUserExist == null) {
-      return res.json(response(false, "User does not exist", {}));
+      return res.json(response(false, `User does not exist`, {}));
     }
 
     // Apply filter
@@ -134,7 +132,7 @@ exports.patchUser = async (req, res) => {
     return res.json(response(true, success, cleanObject(result._doc)));
   } catch (e) {
     if (error.name === 'MongoServerError' && error.code === 11000) {
-      return res.json(response(false, "There was a duplicate key error"));
+      return res.json(response(false, `There was a duplicate key error`));
     }
     return res.status(InternalServerError).json(response(false, error.message));
   }

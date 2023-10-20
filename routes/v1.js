@@ -41,7 +41,7 @@ router.patch(route.editUser, [
     ], 'No parameter found to update'),
 ], userController.patchUser);
 
-router.post(route.deleteUser, [
+router.delete(route.deleteUser, [
   check("id").notEmpty().withMessage("id is required"),
   check("id").isMongoId().withMessage("id is invalid"),
 ], userController.deleteUser);
