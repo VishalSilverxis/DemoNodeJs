@@ -5,5 +5,7 @@ module.exports = {
     editUser: "/edit-user",
     deleteUser: "/delete-user",
     country: "/country",
+    state: "/state",
+    getState: "/get-state",
     getCountry: "/get-country",
 };
