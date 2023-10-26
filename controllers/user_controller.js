@@ -33,7 +33,8 @@ exports.getUser = async (req, res) => {
     }
 
     // Fetch all users
-    var result = await User.find();
+    var result = await User.find({ user_name: {$regex: data.search ?? '', $options: `i`} });
+    // var result = await User.find();
     const result1 = result.map((e) => {
       return getUserResponse(e);
     });
