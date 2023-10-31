@@ -8,6 +8,7 @@ const { check, oneOf } = require("express-validator");
 const route = require("../constants/routes");
 
 //Controllers
+const adminController = require("../controllers/admin_controller");
 const userController = require("../controllers/user_controller");
 const countryController = require("../controllers/country_controller");
 const stateController = require("../controllers/state_controller");
@@ -15,6 +16,19 @@ const stateController = require("../controllers/state_controller");
 router.get('/',(req,res) => {
     return res.json({name: "v1",status: "running"});
 });
+
+// Admin Route
+router.post(route.login, [
+  check("id").isMongoId().withMessage("invalid id").optional(),
+], adminController.getUser);
+
+router.post(route.register, [
+  check("name").notEmpty().withMessage("name is required"),
+  check("email").notEmpty().withMessage("Email is required"),
+  check("email").isEmail().withMessage("Email is invalid"),
+  check("password").notEmpty().withMessage("Password is required"),
+], adminController.addUser);
+
 
 // User Route
 
